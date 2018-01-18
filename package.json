@@ -1,0 +1,82 @@
+{
+  "name": "@bambora/checkout-sdk-web",
+  "version": "1.0.0",
+  "description": "JavaScript SDK for Checkout.",
+  "main": "dist/checkout-sdk-web.js",
+  "module": "dist/checkout-sdk-web.mjs",
+  "browser": "dist/checkout-sdk-web.min.js",
+  "types": "dist/src/index.d.ts",
+  "scripts": {
+    "start": "rimraf ./dist/**/* && rollup -c --watch",
+    "build": "rimraf ./dist/**/* && rollup -c",
+    "build:production": "cross-env NODE_ENV=production npm run build",
+    "test": "karma start --single-run",
+    "test:watch": "karma start --auto-watch",
+    "lint": "tslint -p .",
+    "serve": "http-server ./",
+    "precommit": "lint-staged && npm test"
+  },
+  "lint-staged": {
+    "linters": {
+      "*.ts": [
+        "prettier --parser typescript --write",
+        "tslint -p . --fix",
+        "git add"
+      ],
+      "*.json": ["prettier --write", "git add"]
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bambora/checkout-sdk-web.git"
+  },
+  "author":
+    "Jesper Dalgas Zachariassen <jesper.zachariassen@bambora.com> (http://bambora.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bambora/checkout-sdk-web/issues"
+  },
+  "homepage": "https://github.com/bambora/checkout-sdk-web#readme",
+  "devDependencies": {
+    "@types/chai": "4.1.1",
+    "@types/karma": "1.7.3",
+    "@types/mocha": "2.2.46",
+    "@types/node": "9.4.0",
+    "@types/puppeteer": "1.0.0",
+    "@types/sinon": "4.1.3",
+    "chai": "4.1.2",
+    "cross-env": "5.1.3",
+    "http-server": "0.11.1",
+    "husky": "0.14.3",
+    "karma": "2.0.0",
+    "karma-chai": "0.1.0",
+    "karma-chrome-launcher": "2.2.0",
+    "karma-mocha": "1.3.0",
+    "karma-mocha-reporter": "2.2.5",
+    "karma-sinon": "1.0.5",
+    "karma-typescript": "3.0.11",
+    "lint-staged": "6.0.0",
+    "mocha": "5.0.0",
+    "prettier": "1.10.2",
+    "puppeteer": "1.0.0",
+    "rimraf": "2.6.2",
+    "rollup": "0.54.1",
+    "rollup-plugin-commonjs": "8.2.6",
+    "rollup-plugin-node-builtins": "2.1.2",
+    "rollup-plugin-node-globals": "1.1.0",
+    "rollup-plugin-node-resolve": "3.0.2",
+    "rollup-plugin-typescript2": "0.11.0",
+    "rollup-plugin-uglify": "3.0.0",
+    "sinon": "4.1.6",
+    "ts-node": "4.1.0",
+    "tslint": "5.9.1",
+    "tslint-config-prettier": "1.6.0",
+    "tslint-consistent-codestyle": "1.11.0",
+    "tslint-eslint-rules": "4.1.1",
+    "typescript": "2.7.2"
+  },
+  "dependencies": {
+    "mitt": "1.1.3",
+    "native-promise-only": "0.8.1"
+  }
+}

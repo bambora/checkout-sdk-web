@@ -1,0 +1,12 @@
+node_modules
+src
+test
+.gitignore
+karma.conf.ts
+package-lock.json
+rollup.config.js
+tsconfig.json
+tslint.json
+coverage
+.rpt2_cache
+hooks

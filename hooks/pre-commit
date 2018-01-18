@@ -1,0 +1,27 @@
+#!/bin/sh
+#husky 0.14.3
+
+has_hook_script () {
+  [ -f package.json ] && cat package.json | grep -q "\"$1\"[[:space:]]*:"
+}
+
+cd "."
+
+# Check if precommit script is defined, skip if not
+has_hook_script precommit || exit 0
+
+# Add common path where Node can be found
+export PATH="$PATH:/usr/local/bin:/usr/local"
+
+# Export Git hook params
+export GIT_PARAMS="$*"
+
+# Run npm script
+echo "husky > npm run -s precommit"
+echo
+
+docker-compose run --rm sdk-build-runner sh -c "npm run -s precommit" || {
+  echo
+  echo "husky > pre-commit hook failed (add --no-verify to bypass)"
+  exit 1
+}

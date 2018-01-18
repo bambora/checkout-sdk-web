@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "es5",
+    "rootDir": ".",
+    "outDir": "./lib",
+    "declaration": true,
+    "inlineSourceMap": true,
+    "alwaysStrict": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "removeComments": false,
+    "baseUrl": ".",
+    "strict": true,
+    "importHelpers": true,
+    "lib": ["dom", "es5", "es2015.promise", "es6"],
+    "types": ["node"],
+    "noImplicitAny": false
+  },
+  "include": ["src", "test"]
+}
