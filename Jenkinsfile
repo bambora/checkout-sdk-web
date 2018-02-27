@@ -77,21 +77,6 @@ node("docker-concurrent") {
     notify_success("Building of ${gitTag} was successful.")
   }
 
-  stage("Test") {
-    notify_start("Testing of ${gitTag} has started...")
-
-    try {
-      docker.image("node:7.0").inside("-u 0:0") {
-        sh "npm test"
-      }
-    } catch (error) {
-      notify_failure("Testing of ${gitTag} failed!")
-      throw error
-    }
-
-    notify_success("Testing of ${gitTag} was successful.")
-  }
-
   stage("Publish to Bambora CDN") {
     if (!(env.BRANCH_NAME == "master" && hasGitTag)) {
       echo "Nothing to publish"
