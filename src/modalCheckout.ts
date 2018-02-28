@@ -168,9 +168,12 @@ export default class ModalCheckout extends AbstractIframeCheckout<
   }
 
   private _getElementCoordinates(target?: Element): ElementCoordinates {
-    const element = target || this._initiatingElement;
+    const element =
+      target && target.getBoundingClientRect ? target : this._initiatingElement;
 
-    if (!element) return { x: 0, y: 0 };
+    if (!element) {
+      return { x: 0, y: 0 };
+    }
 
     const boundingClientRect = (element as Element).getBoundingClientRect();
 
