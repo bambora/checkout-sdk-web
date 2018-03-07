@@ -58,7 +58,6 @@ export default abstract class AbstractIframeCheckout<
    * Throws `LoadSessionError` on failure to load session.
    */
   async initialize(sessionToken?: string): Promise<string> {
-    await super.initialize(sessionToken);
     return this._loadSession(await super.initialize(sessionToken));
   }
 
