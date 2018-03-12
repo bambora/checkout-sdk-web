@@ -3,7 +3,7 @@ import InlineCheckout from "./inlineCheckout";
 import RedirectCheckout from "./redirectCheckout";
 import ModalCheckout from "./modalCheckout";
 import { UI } from "./options";
-import * as Error from "./errors";
+import * as Errors from "./errors";
 import Event from "./events";
 
 declare global {
@@ -11,7 +11,7 @@ declare global {
     InlineCheckout: typeof InlineCheckout;
     RedirectCheckout: typeof RedirectCheckout;
     ModalCheckout: typeof ModalCheckout;
-    Errors: typeof Error;
+    Errors: typeof Errors;
     Events: typeof Event;
     UI: typeof UI;
   }
@@ -24,4 +24,4 @@ declare global {
   const Bambora: Bambora;
 }
 
-export { UI, InlineCheckout, RedirectCheckout, ModalCheckout, Error, Event };
+export { UI, InlineCheckout, RedirectCheckout, ModalCheckout, Errors, Event };
