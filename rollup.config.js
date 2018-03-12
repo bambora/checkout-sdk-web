@@ -28,15 +28,17 @@ const commonPlugins = [
 ];
 
 export default [
-  // Unminified ES2015 and UMD modules for Node:
   {
     input: "./src/index.ts",
     output: [
+      // Unminified ESM:
       {
         file: pkg.module,
         format: "es",
         sourcemap: shouldUseSourceMaps && "inline"
       },
+
+      // Unminified UMD:
       {
         name: "Bambora",
         file: pkg.main,
@@ -47,12 +49,12 @@ export default [
     plugins: commonPlugins
   },
 
-  // Minified IIFE for browsers:
+  // Minified IIFE for CDN:
   {
     input: "./src/index.ts",
     output: {
       name: "Bambora",
-      file: pkg.browser,
+      file: "dist/checkout-sdk-web.min.js",
       format: "iife"
     },
     plugins: [...commonPlugins, uglify()]

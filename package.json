@@ -4,7 +4,6 @@
   "description": "JavaScript SDK for Checkout.",
   "main": "dist/checkout-sdk-web.js",
   "module": "dist/checkout-sdk-web.mjs",
-  "browser": "dist/checkout-sdk-web.min.js",
   "types": "dist/src/index.d.ts",
   "scripts": {
     "start": "rimraf ./dist/**/* && rollup -c --watch",
