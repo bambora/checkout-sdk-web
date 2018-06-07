@@ -65,7 +65,6 @@ export default class ModalCheckout extends AbstractIframeCheckout<
     this._overlayContainer.appendChild(this._createFocusTrap());
 
     this._createAsyncIframe();
-    this._mount(this._container);
 
     this.on(CheckoutEvent.Cancel, this.hide.bind(this));
     this.on(CheckoutEvent.Close, this.hide.bind(this));

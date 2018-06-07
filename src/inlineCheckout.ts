@@ -27,7 +27,6 @@ export default class InlineCheckout extends AbstractIframeCheckout<
     // If the container is specified, create async iframe and mount it.
     this._container = this._options.container;
     this._createAsyncIframe();
-    this.mount(this._options.container);
   }
 
   /** Mounts the iframe to the specified container. */
