@@ -31,6 +31,10 @@ export default class InlineCheckout extends AbstractIframeCheckout<
 
   /** Mounts the iframe to the specified container. */
   async mount(container: Element): Promise<HTMLIFrameElement> {
-    return this._mount(container);
+    // Set this._container to avoid exceptions when trying to access
+    // this.iframe immediately after.
+    this._container = container;
+
+    return await this.iframe;
   }
 }

@@ -70,18 +70,6 @@ export default abstract class AbstractIframeCheckout<
     return this._asyncIframe.element;
   }
 
-  /** Mounts the iframe to the specified container. */
-  protected async _mount(container: Element): Promise<HTMLIFrameElement> {
-    // Set this._container to avoid exceptions when trying to access
-    // this.iframe immediately after.
-    this._container = container;
-
-    const iframeElement = await this.iframe;
-    container.appendChild(iframeElement);
-
-    return iframeElement;
-  }
-
   protected _createAsyncIframe() {
     if (this.__asyncIframe) return;
 
