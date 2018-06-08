@@ -115,7 +115,9 @@ export default class AsyncIframe {
     );
 
     const iframeElement = await iframeElementPromise;
-    this._removeIframeEventHandlers(iframeElement);
+
+    this._rebindIframeEventHandlers(iframeElement);
+    this._initiateEventProxy();
 
     await this._initiateHandshake(iframeElement);
 
@@ -148,8 +150,6 @@ export default class AsyncIframe {
     } catch (error) {
       throw new HandshakeError((error as GenericMessageError).message);
     }
-
-    this._initiateEventProxy();
   }
 
   private _initiateEventProxy() {
@@ -164,10 +164,10 @@ export default class AsyncIframe {
     this._emit(event.data.event, event.data.payload);
   }
 
-  private _removeIframeEventHandlers(
+  private _rebindIframeEventHandlers(
     iframeElement: HTMLIFrameElement
   ): HTMLIFrameElement {
-    iframeElement.onload = null as any;
+    iframeElement.onload = () => this._initiateHandshake(iframeElement);
     iframeElement.onerror = null as any;
 
     return iframeElement;

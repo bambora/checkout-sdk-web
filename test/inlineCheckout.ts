@@ -78,6 +78,37 @@ describe("InlineCheckout", () => {
       postMessage.restore();
       checkoutUrl.restore();
     });
+
+    it("throws LoadSessionError on attempt to load another session", async () => {
+      const newSessionToken = "654321";
+      const postMessage = sinon.stub(AsyncIframe.prototype, "postMessage");
+      const blobUrl = getHtmlBlobUrl(handshakeHelper());
+      const checkoutUrl = sinon
+        .stub(InlineCheckout.prototype, "_checkoutUrl" as any)
+        .get(() => blobUrl);
+
+      postMessage.resolves(newSessionToken);
+
+      const checkout = new InlineCheckout("123456", {
+        container: document.body
+      });
+
+      await checkout.initialize(newSessionToken);
+
+      expect(await checkout.initialize(newSessionToken)).to.equal(
+        newSessionToken
+      );
+
+      try {
+        await checkout.initialize("another");
+        throw new Error("An error should be thrown");
+      } catch (error) {
+        expect(error).to.be.instanceof(LoadSessionError);
+      }
+
+      postMessage.restore();
+      checkoutUrl.restore();
+    });
   });
 
   describe("#mount()", () => {

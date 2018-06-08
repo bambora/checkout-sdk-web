@@ -25,6 +25,8 @@ export default abstract class AbstractIframeCheckout<
   /** Used to avoid an exception thrown in `iframe` getter when the container is falsy. */
   protected _container: Element | null = null;
 
+  private _lastSessionToken?: string;
+
   /**
    * The `__asyncIframe` property should only be accessed via the `_asyncIframe` getter.
    * If you use `__asyncIframe` directly you better know what you're doing!
@@ -89,11 +91,24 @@ export default abstract class AbstractIframeCheckout<
   }
 
   protected async _loadSession(token: string): Promise<string> {
+    if (this._lastSessionToken) {
+      if (token === this._lastSessionToken) {
+        return Promise.resolve(token);
+      }
+
+      throw new LoadSessionError(
+        "Loading a different session is not supported. Try creating a new Checkout instance."
+      );
+    }
     try {
-      return await this._asyncIframe.postMessage<string, string>({
+      const response = await this._asyncIframe.postMessage<string, string>({
         action: Action.LoadSession,
         payload: token
       });
+
+      this._lastSessionToken = token;
+
+      return response;
     } catch (error) {
       throw new LoadSessionError((error as GenericMessageError).message);
     }
