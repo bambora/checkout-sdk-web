@@ -3,6 +3,7 @@ import nodeResolve from "rollup-plugin-node-resolve";
 import globals from "rollup-plugin-node-globals";
 import builtins from "rollup-plugin-node-builtins";
 import uglify from "rollup-plugin-uglify";
+import replace from "rollup-plugin-replace";
 import typescript from "rollup-plugin-typescript2";
 import tsc from "typescript";
 
@@ -22,6 +23,9 @@ const commonPlugins = [
     }
   }),
   nodeResolve({ preferBuiltins: false }),
+  replace({
+    NPM_VERSION: process.env.npm_package_version
+  }),
   commonjs(),
   globals(),
   builtins()

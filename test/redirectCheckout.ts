@@ -17,7 +17,7 @@ describe("RedirectCheckout", () => {
 
       sinon.assert.calledWith(
         redirect,
-        "https://v1.checkout.bambora.com/123456?ui=fullscreen&language=en-US"
+        "https://v1.checkout.bambora.com/123456?ui=fullscreen&language=en-US#eyJ2ZXJzaW9uIjoiTlBNX1ZFUlNJT04ifQ=="
       );
 
       redirect.restore();
@@ -43,7 +43,7 @@ describe("RedirectCheckout", () => {
       const checkout = new RedirectCheckout(null);
 
       expect(await checkout.initialize("123456")).to.equal(
-        "https://v1.checkout.bambora.com/123456?ui=fullscreen&language=en-US"
+        "https://v1.checkout.bambora.com/123456?ui=fullscreen&language=en-US#eyJ2ZXJzaW9uIjoiTlBNX1ZFUlNJT04ifQ=="
       );
 
       // Calling initialize without ever providing a session token should throw a NoSessionTokenProvidedError:

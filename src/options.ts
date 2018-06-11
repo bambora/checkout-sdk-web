@@ -41,7 +41,14 @@ export function mapOptionsToClientSideOptions(
   options: CheckoutInstanceOptions
 ): Partial<PaymentWindowClientSideOptions> {
   const { styles, labels } = options;
-  return { styles, labels };
+
+  let version = "NPM_VERSION";
+
+  if (window && typeof window["__bambora-system"] === "string") {
+    version += `-${window["__bambora-system"]}`;
+  }
+
+  return { styles, labels, version };
 }
 
 /** Maps an options object to a server-side objects object. */
@@ -79,6 +86,9 @@ export interface PaymentWindowClientSideOptions {
 
   /** Client-side label overrides. */
   labels: { [key: string]: string };
+
+  /** SDK version. */
+  version: string;
 }
 
 /** Options that are passed server-side only, via GET parameters. */
