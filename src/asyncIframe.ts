@@ -181,7 +181,12 @@ export function getOrigin(url: string): string {
   const a = document.createElement("a");
   a.setAttribute("href", url);
 
-  return `${a.protocol}//${a.host}`;
+  return (
+    `${a.protocol}//${a.hostname}` +
+    (a.port !== "80" && a.port !== "443" && a.port !== "0" && a.port
+      ? `:${a.port}`
+      : "")
+  );
 }
 
 /** The signature of message requests. */
