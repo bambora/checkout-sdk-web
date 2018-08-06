@@ -40,7 +40,7 @@ export const DEFAULT_INLINE_OPTIONS: Readonly<InlineCheckoutInstanceOptions> = {
 export function mapOptionsToClientSideOptions(
   options: CheckoutInstanceOptions
 ): Partial<PaymentWindowClientSideOptions> {
-  const { styles, labels } = options;
+  const { styles, labels, demo } = options;
 
   let version = "NPM_VERSION";
 
@@ -48,7 +48,7 @@ export function mapOptionsToClientSideOptions(
     version += `-${window["__bambora-system"]}`;
   }
 
-  return { styles, labels, version };
+  return { styles, labels, demo, version };
 }
 
 /** Maps an options object to a server-side objects object. */
@@ -89,6 +89,9 @@ export interface PaymentWindowClientSideOptions {
 
   /** SDK version. */
   version: string;
+
+  /** Whether to present Checkout in demo mode (internal). */
+  demo: boolean;
 }
 
 /** Options that are passed server-side only, via GET parameters. */
