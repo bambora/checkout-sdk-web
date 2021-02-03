@@ -1,6 +1,6 @@
 {
   "name": "@bambora/checkout-sdk-web",
-  "version": "3.0.6",
+  "version": "3.0.7",
   "description": "JavaScript SDK for Checkout.",
   "main": "dist/checkout-sdk-web.js",
   "module": "dist/checkout-sdk-web.mjs",
