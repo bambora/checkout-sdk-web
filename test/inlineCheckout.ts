@@ -149,6 +149,7 @@ describe("InlineCheckout", () => {
 
       expect(iframe).to.be.instanceof(HTMLIFrameElement);
       expect(iframe).not.to.be.instanceof(HTMLDivElement);
+      expect(iframe.getAttribute("allow")).to.be.eq("payment 'src'");
 
       checkoutUrl.restore();
     });
