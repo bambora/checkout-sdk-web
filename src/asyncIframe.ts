@@ -132,6 +132,7 @@ export default class AsyncIframe {
     iframeElement.setAttribute("frameborder", "0");
     iframeElement.setAttribute("allowTransparency", "true");
     iframeElement.setAttribute("style", "width:100%; height:100%;");
+    iframeElement.setAttribute("allow", "payment 'src'");
 
     return iframeElement;
   }

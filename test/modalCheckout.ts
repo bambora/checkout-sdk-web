@@ -206,6 +206,9 @@ describe("ModalCheckout", () => {
 
       const checkout = new ModalCheckout("123456");
       const iframe = await checkout.iframe;
+
+      expect(iframe.getAttribute("allow")).to.be.eq("payment 'src'");
+
       const overlayContainer = iframe.parentElement!.parentElement!;
 
       expect(overlayContainer.style.display).to.equal("none");
