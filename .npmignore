@@ -4,15 +4,9 @@ test/
 dist/test/
 coverage/
 .rpt2_cache/
-hooks/
 .gitignore
 karma.conf.ts
 package-lock.json
 rollup.config.js
 tsconfig.json
 tslint.json
-.dockerignore
-docker-compose*
-*Dockerfile
-Jenkinsfile
-Makefile
