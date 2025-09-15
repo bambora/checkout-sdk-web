@@ -1,12 +1,4 @@
-node_modules/
-src/
-test/
-dist/test/
-coverage/
-.rpt2_cache/
-.gitignore
-karma.conf.ts
-package-lock.json
-rollup.config.js
-tsconfig.json
-tslint.json
+*
+!dist/**/*
+dist/types/web.d.ts
+dist/checkout-sdk-web.min.js

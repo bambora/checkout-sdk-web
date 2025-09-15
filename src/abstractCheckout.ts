@@ -1,28 +1,25 @@
+import { NoSessionTokenProvidedError } from './errors'
 import {
-  DEFAULT_COMMON_OPTIONS,
   CheckoutInstanceOptions,
+  DEFAULT_COMMON_OPTIONS,
   mapOptionsToClientSideOptions,
   mapOptionsToServerSideOptions,
   optionsToBase64,
-  optionsToQueryString
-} from "./options";
-import { NoSessionTokenProvidedError } from "./errors";
+  optionsToQueryString,
+} from './options'
 
-// tslint:disable-next-line:completed-docs
-export default abstract class AbstractCheckout<
-  OptionsType extends CheckoutInstanceOptions
-> {
+export default abstract class AbstractCheckout<OptionsType extends CheckoutInstanceOptions> {
   /** `_options` are readonly to avoid arbitrary changes. */
-  protected readonly _options: Readonly<OptionsType>;
+  protected readonly _options: Readonly<OptionsType>
 
   constructor(
     public sessionToken: string | null,
-    options: Partial<OptionsType>
+    options: Partial<OptionsType>,
   ) {
     this._options = {
       ...DEFAULT_COMMON_OPTIONS,
-      ...(options as any)
-    };
+      ...options,
+    } as Readonly<OptionsType>
   }
 
   /**
@@ -30,32 +27,28 @@ export default abstract class AbstractCheckout<
    * Throws `NoSessionTokenProvidedError` if no session token has been provided.
    */
   async initialize(sessionToken?: string): Promise<string> {
-    if (sessionToken) this.sessionToken = sessionToken;
+    if (sessionToken) this.sessionToken = sessionToken
 
     if (!this.sessionToken) {
-      throw new NoSessionTokenProvidedError(
-        "A session invocation was attempted while no session token was provided."
-      );
+      throw new NoSessionTokenProvidedError('A session invocation was attempted while no session token was provided.')
     }
 
-    return this.sessionToken;
+    return this.sessionToken
   }
 
   protected get _checkoutUrl(): string {
-    const clientSideOptions = mapOptionsToClientSideOptions(this._options);
-    const serverSideOptions = mapOptionsToServerSideOptions(this._options);
+    const clientSideOptions = mapOptionsToClientSideOptions(this._options)
+    const serverSideOptions = mapOptionsToServerSideOptions(this._options)
 
-    let anchorString = optionsToBase64(clientSideOptions);
-    if (anchorString) anchorString = `#${anchorString}`;
+    let anchorString = optionsToBase64(clientSideOptions)
+    if (anchorString) anchorString = `#${anchorString}`
 
-    const queryString = `?${optionsToQueryString(serverSideOptions)}`;
+    const queryString = `?${optionsToQueryString(serverSideOptions)}`
 
     if (!this.sessionToken) {
-      return `${this._options.endpoint}${queryString}${anchorString}`;
+      return `${this._options.endpoint}${queryString}${anchorString}`
     }
 
-    return `${this._options.endpoint}/${
-      this.sessionToken
-    }${queryString}${anchorString}`;
+    return `${this._options.endpoint}/${this.sessionToken}${queryString}${anchorString}`
   }
 }

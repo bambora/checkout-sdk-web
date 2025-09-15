@@ -1,21 +1,18 @@
-// tslint:disable:max-classes-per-file
-// tslint:disable:early-exit
-
-// Ponyfill for setPrototypeOf
+// Polyfill for setPrototypeOf
 const setPrototypeOf =
   Object.setPrototypeOf ||
   ((obj: any, proto: any) => {
-    obj.__proto__ = proto;
-    return obj;
-  });
+    obj.__proto__ = proto
+    return obj
+  })
 
 /** Thrown when a session token is required but has not been provided. */
 export class NoSessionTokenProvidedError extends ReferenceError {
   constructor(message?: string) {
-    super(message);
-    setPrototypeOf(this, new.target.prototype);
+    super(message)
+    setPrototypeOf(this, new.target.prototype)
     if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, NoSessionTokenProvidedError);
+      Error.captureStackTrace(this, NoSessionTokenProvidedError)
     }
   }
 }
@@ -23,10 +20,10 @@ export class NoSessionTokenProvidedError extends ReferenceError {
 /** Thrown when there was a problem loading a session. */
 export class LoadSessionError extends Error {
   constructor(message?: string) {
-    super(message);
-    setPrototypeOf(this, new.target.prototype);
+    super(message)
+    setPrototypeOf(this, new.target.prototype)
     if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, LoadSessionError);
+      Error.captureStackTrace(this, LoadSessionError)
     }
   }
 }
@@ -34,10 +31,10 @@ export class LoadSessionError extends Error {
 /** Thrown when the response to a message has resulted in an error. */
 export class GenericMessageError extends Error {
   constructor(message?: string) {
-    super(message);
-    setPrototypeOf(this, new.target.prototype);
+    super(message)
+    setPrototypeOf(this, new.target.prototype)
     if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, GenericMessageError);
+      Error.captureStackTrace(this, GenericMessageError)
     }
   }
 }
@@ -45,10 +42,10 @@ export class GenericMessageError extends Error {
 /** Thrown when handshaking could not be completed. */
 export class HandshakeError extends Error {
   constructor(message?: string) {
-    super(message);
-    setPrototypeOf(this, new.target.prototype);
+    super(message)
+    setPrototypeOf(this, new.target.prototype)
     if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, HandshakeError);
+      Error.captureStackTrace(this, HandshakeError)
     }
   }
 }
@@ -56,10 +53,10 @@ export class HandshakeError extends Error {
 /** Thrown when a container is required but has not been provided. */
 export class ContainerNotSpecifiedError extends Error {
   constructor(message?: string) {
-    super(message);
-    setPrototypeOf(this, new.target.prototype);
+    super(message)
+    setPrototypeOf(this, new.target.prototype)
     if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, ContainerNotSpecifiedError);
+      Error.captureStackTrace(this, ContainerNotSpecifiedError)
     }
   }
 }

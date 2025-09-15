@@ -1,22 +1,19 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "esnext",
     "moduleResolution": "node",
     "target": "es5",
-    "rootDir": ".",
-    "outDir": "./lib",
+    "rootDir": "./src",
+    "outDir": "./dist",
     "declaration": true,
-    "inlineSourceMap": true,
+    "declarationDir": "./dist/types",
+    "inlineSourceMap": false,
     "alwaysStrict": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "removeComments": false,
-    "baseUrl": ".",
+    "removeComments": true,
     "strict": true,
-    "importHelpers": true,
-    "lib": ["dom", "es5", "es2015.promise", "es6"],
-    "types": ["node"],
-    "noImplicitAny": false
+    "lib": ["dom", "es5", "es2015"],
+    "noImplicitAny": false,
+    "isolatedModules": true,
   },
-  "include": ["src", "test"]
+  "include": ["src/**/*"]
 }
