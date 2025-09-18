@@ -1,10 +1,6 @@
-import CheckoutEvent from "../../src/events";
+import { CheckoutEvent } from '../../src/events'
 
-// tslint:disable:completed-docs
-export function eventHelper(
-  event: CheckoutEvent = CheckoutEvent.Authorize,
-  payload?: any
-): string {
+export function eventHelper(event: CheckoutEvent = CheckoutEvent.Authorize, payload?: any): string {
   return `
     window.parent.postMessage(
       {
@@ -14,7 +10,7 @@ export function eventHelper(
       },
       "*"
     );
-  `;
+  `
 }
 
-export default eventHelper;
+export default eventHelper
