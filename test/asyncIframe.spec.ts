@@ -1,5 +1,6 @@
 import { expect } from 'chai'
 
+import { Action } from '../src/actions'
 import AsyncIframe, { getOrigin } from '../src/asyncIframe'
 import { GenericMessageError, HandshakeError } from '../src/errors'
 import { CheckoutEvent } from '../src/events'
@@ -33,7 +34,7 @@ describe('AsyncIframe', () => {
   describe('#postMessage()', () => {
     it('resolves on successful response', async () => {
       // We just use any random action
-      const action = 'someRandomTestAction' as any
+      const action = 'someRandomTestAction' as Action
 
       const blobUrl = getHtmlBlobUrl(handshakeHelper(), responseHelper(true, action))
       const asyncIframe = new AsyncIframe(blobUrl, document.body, getOrigin(blobUrl))
@@ -43,7 +44,7 @@ describe('AsyncIframe', () => {
 
     it('throws GenericMessageError on erronous response', async () => {
       // We just use any random action
-      const action = 'someRandomTestAction' as any
+      const action = 'someRandomTestAction' as Action
 
       const blobUrl = getHtmlBlobUrl(handshakeHelper(), responseHelper(false, action))
       const asyncIframe = new AsyncIframe(blobUrl, document.body, getOrigin(blobUrl))
@@ -63,15 +64,18 @@ describe('AsyncIframe', () => {
         handshakeHelper(true, eventHelper(CheckoutEvent.Authorize, { transactionId: '123' })),
       )
 
-      const { type, event } = await new Promise<{ type: string; event: any }>((resolve) => {
+      const { type, event: checkoutEvent } = await new Promise<{
+        type: string
+        event: { transactionId: string }
+      }>((resolve) => {
         const asyncIframe = new AsyncIframe(blobUrl, document.body, getOrigin(blobUrl))
         if (asyncIframe.on) {
-          asyncIframe.on('*', ((t, e) => resolve({ type: t, event: e })) as any)
+          asyncIframe.on('*', (t, e) => resolve({ type: t, event: e as { transactionId: string } }))
         }
       })
 
       expect(type).to.equal(CheckoutEvent.Authorize)
-      expect(event.transactionId).to.equal('123')
+      expect(checkoutEvent.transactionId).to.equal('123')
     })
   })
 

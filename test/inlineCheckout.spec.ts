@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import * as sinon from 'sinon'
+import { stub } from 'sinon'
 
 import AsyncIframe from '../src/asyncIframe'
 import { ContainerNotSpecifiedError, LoadSessionError } from '../src/errors'
@@ -8,12 +8,19 @@ import InlineCheckout from '../src/inlineCheckout'
 
 import { eventHelper, getHtmlBlobUrl, handshakeHelper } from './helpers'
 
+type InlineCheckoutPrototype = {
+  _checkoutUrl: string
+}
+
+const stubCheckoutUrl = (blobUrl: string) =>
+  stub(InlineCheckout.prototype as unknown as InlineCheckoutPrototype, '_checkoutUrl').value(blobUrl)
+
 describe('InlineCheckout', () => {
   describe('#constructor()', () => {
     it('mounts the iframe when container is provided in the constructor', async () => {
       const blobUrl = getHtmlBlobUrl(handshakeHelper())
 
-      const checkoutUrl = sinon.stub(InlineCheckout.prototype, '_checkoutUrl' as any).get(() => blobUrl)
+      const checkoutUrl = stubCheckoutUrl(blobUrl)
 
       const divElement = document.body.appendChild(document.createElement('div'))
 
@@ -31,9 +38,9 @@ describe('InlineCheckout', () => {
   describe('#initialize()', () => {
     it('resolves upon successful load of session', async () => {
       const newSessionToken = '654321'
-      const postMessage = sinon.stub(AsyncIframe.prototype, 'postMessage')
+      const postMessage = stub(AsyncIframe.prototype, 'postMessage')
       const blobUrl = getHtmlBlobUrl(handshakeHelper())
-      const checkoutUrl = sinon.stub(InlineCheckout.prototype, '_checkoutUrl' as any).get(() => blobUrl)
+      const checkoutUrl = stubCheckoutUrl(blobUrl)
 
       postMessage.resolves(newSessionToken)
 
@@ -49,9 +56,9 @@ describe('InlineCheckout', () => {
 
     it('throws LoadSessionError on failure to load session', async () => {
       const newSessionToken = '654321'
-      const postMessage = sinon.stub(AsyncIframe.prototype, 'postMessage')
+      const postMessage = stub(AsyncIframe.prototype, 'postMessage')
       const blobUrl = getHtmlBlobUrl(handshakeHelper())
-      const checkoutUrl = sinon.stub(InlineCheckout.prototype, '_checkoutUrl' as any).get(() => blobUrl)
+      const checkoutUrl = stubCheckoutUrl(blobUrl)
 
       postMessage.rejects()
 
@@ -72,9 +79,9 @@ describe('InlineCheckout', () => {
 
     it('throws LoadSessionError on attempt to load another session', async () => {
       const newSessionToken = '654321'
-      const postMessage = sinon.stub(AsyncIframe.prototype, 'postMessage')
+      const postMessage = stub(AsyncIframe.prototype, 'postMessage')
       const blobUrl = getHtmlBlobUrl(handshakeHelper())
-      const checkoutUrl = sinon.stub(InlineCheckout.prototype, '_checkoutUrl' as any).get(() => blobUrl)
+      const checkoutUrl = stubCheckoutUrl(blobUrl)
 
       postMessage.resolves(newSessionToken)
 
@@ -101,7 +108,7 @@ describe('InlineCheckout', () => {
   describe('#mount()', () => {
     it('mounts the iframe to the provided container', async () => {
       const blobUrl = getHtmlBlobUrl(handshakeHelper())
-      const checkoutUrl = sinon.stub(InlineCheckout.prototype, '_checkoutUrl' as any).get(() => blobUrl)
+      const checkoutUrl = stubCheckoutUrl(blobUrl)
 
       const divElement = document.body.appendChild(document.createElement('div'))
 
@@ -121,7 +128,7 @@ describe('InlineCheckout', () => {
   describe('#iframe', () => {
     it('resolves to a HTMLIFrameElement', async () => {
       const blobUrl = getHtmlBlobUrl(handshakeHelper())
-      const checkoutUrl = sinon.stub(InlineCheckout.prototype, '_checkoutUrl' as any).get(() => blobUrl)
+      const checkoutUrl = stubCheckoutUrl(blobUrl)
 
       const checkout = new InlineCheckout('123456')
       checkout.mount(document.body)
@@ -137,7 +144,7 @@ describe('InlineCheckout', () => {
 
     it('throws ContainerNotSpecifiedError when accessing the iframe without having specified a container', async () => {
       const blobUrl = getHtmlBlobUrl(handshakeHelper())
-      const checkoutUrl = sinon.stub(InlineCheckout.prototype, '_checkoutUrl' as any).get(() => blobUrl)
+      const checkoutUrl = stubCheckoutUrl(blobUrl)
 
       const checkout = new InlineCheckout('123456', {
         container: null,
@@ -160,19 +167,22 @@ describe('InlineCheckout', () => {
         handshakeHelper(true, eventHelper(CheckoutEvent.Authorize, { transactionId: '123' })),
       )
 
-      const checkoutUrl = sinon.stub(InlineCheckout.prototype, '_checkoutUrl' as any).get(() => blobUrl)
+      const checkoutUrl = stubCheckoutUrl(blobUrl)
 
-      const { type, event } = await new Promise<{ type: string; event: any }>((resolve) => {
+      const { type, payload } = await new Promise<{
+        type: string
+        payload: { transactionId: string }
+      }>((resolve) => {
         const checkout = new InlineCheckout('123456')
         checkout.mount(document.body)
 
         if (checkout.on) {
-          checkout.on('*', (t, e) => resolve({ type: t, event: e }))
+          checkout.on('*', (t, e) => resolve({ type: t, payload: e as { transactionId: string } }))
         }
       })
 
       expect(type).to.equal(CheckoutEvent.Authorize)
-      expect(event.transactionId).to.equal('123')
+      expect(payload.transactionId).to.equal('123')
 
       checkoutUrl.restore()
     })
@@ -181,7 +191,7 @@ describe('InlineCheckout', () => {
   describe('#destroy()', () => {
     it('removes the iframe element from the DOM', async () => {
       const blobUrl = getHtmlBlobUrl(handshakeHelper())
-      const checkoutUrl = sinon.stub(InlineCheckout.prototype, '_checkoutUrl' as any).get(() => blobUrl)
+      const checkoutUrl = stubCheckoutUrl(blobUrl)
 
       const checkout = new InlineCheckout('123456')
       checkout.mount(document.body)

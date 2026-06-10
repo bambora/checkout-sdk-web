@@ -1,18 +1,24 @@
 // Polyfill for setPrototypeOf
 const setPrototypeOf =
   Object.setPrototypeOf ||
-  ((obj: any, proto: any) => {
+  ((obj: { __proto__?: object | null }, proto: object | null) => {
     obj.__proto__ = proto
-    return obj
+    return obj as object
   })
+
+type ErrorConstructorWithStackTrace = ErrorConstructor & {
+  captureStackTrace?: (targetObject: object) => void
+}
+
+const errorWithStackTrace = Error as ErrorConstructorWithStackTrace
 
 /** Thrown when a session token is required but has not been provided. */
 export class NoSessionTokenProvidedError extends ReferenceError {
   constructor(message?: string) {
     super(message)
     setPrototypeOf(this, new.target.prototype)
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, NoSessionTokenProvidedError)
+    if (errorWithStackTrace.captureStackTrace) {
+      errorWithStackTrace.captureStackTrace(this)
     }
   }
 }
@@ -22,8 +28,8 @@ export class LoadSessionError extends Error {
   constructor(message?: string) {
     super(message)
     setPrototypeOf(this, new.target.prototype)
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, LoadSessionError)
+    if (errorWithStackTrace.captureStackTrace) {
+      errorWithStackTrace.captureStackTrace(this)
     }
   }
 }
@@ -33,8 +39,8 @@ export class GenericMessageError extends Error {
   constructor(message?: string) {
     super(message)
     setPrototypeOf(this, new.target.prototype)
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, GenericMessageError)
+    if (errorWithStackTrace.captureStackTrace) {
+      errorWithStackTrace.captureStackTrace(this)
     }
   }
 }
@@ -44,8 +50,8 @@ export class HandshakeError extends Error {
   constructor(message?: string) {
     super(message)
     setPrototypeOf(this, new.target.prototype)
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, HandshakeError)
+    if (errorWithStackTrace.captureStackTrace) {
+      errorWithStackTrace.captureStackTrace(this)
     }
   }
 }
@@ -55,8 +61,8 @@ export class ContainerNotSpecifiedError extends Error {
   constructor(message?: string) {
     super(message)
     setPrototypeOf(this, new.target.prototype)
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, ContainerNotSpecifiedError)
+    if (errorWithStackTrace.captureStackTrace) {
+      errorWithStackTrace.captureStackTrace(this)
     }
   }
 }

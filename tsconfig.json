@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "module": "esnext",
+    "module": "es2015",
     "moduleResolution": "node",
     "target": "es5",
+    "ignoreDeprecations": "6.0",
     "rootDir": "./src",
     "outDir": "./dist",
     "declaration": true,
@@ -12,8 +13,17 @@
     "removeComments": true,
     "strict": true,
     "lib": ["dom", "es5", "es2015"],
+    "types": ["node"],
     "noImplicitAny": false,
     "isolatedModules": true,
   },
-  "include": ["src/**/*"]
+  "include": [
+    "src/**/*",
+    "rollup.config.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "test"
+  ]
 }

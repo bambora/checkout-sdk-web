@@ -67,7 +67,8 @@ export function optionsToQueryString(options: PaymentWindowServerSideOptions) {
 /** Options that are passed client-side only, via the URL `#` hash. */
 export interface PaymentWindowClientSideOptions {
   /** Client-side style overrides. */
-  styles: any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- backward compatibility for legacy style payload typing
+  styles: unknown | any
 
   /** Client-side label overrides. */
   labels: { [key: string]: string }
@@ -90,8 +91,7 @@ export interface PaymentWindowServerSideOptions {
 
 /** Options that are common to all Checkout experiences. */
 export interface CommonCheckoutInstanceOptions
-  extends Partial<PaymentWindowClientSideOptions>,
-    PaymentWindowServerSideOptions {
+  extends Partial<PaymentWindowClientSideOptions>, PaymentWindowServerSideOptions {
   /** The Checkout endpoint to use. */
   endpoint: string
 }
