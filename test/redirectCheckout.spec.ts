@@ -4,10 +4,14 @@ import { assert, stub } from 'sinon'
 import { NoSessionTokenProvidedError } from '../src/errors'
 import RedirectCheckout from '../src/redirectCheckout'
 
+type RedirectCheckoutPrototype = {
+  _redirect: (url: string) => void
+}
+
 describe('RedirectCheckout', () => {
   describe('#constructor()', () => {
     it('redirects when a session token is provided', () => {
-      const redirect = stub(RedirectCheckout.prototype, '_redirect' as any)
+      const redirect = stub(RedirectCheckout.prototype as unknown as RedirectCheckoutPrototype, '_redirect')
 
       new RedirectCheckout('123456')
 
@@ -20,7 +24,7 @@ describe('RedirectCheckout', () => {
     })
 
     it('does not redirect when the session token is not provided', () => {
-      const redirect = stub(RedirectCheckout.prototype, '_redirect' as any)
+      const redirect = stub(RedirectCheckout.prototype as unknown as RedirectCheckoutPrototype, '_redirect')
 
       new RedirectCheckout(null)
 

@@ -8,11 +8,25 @@ import ModalCheckout, { Style, delay } from '../src/modalCheckout'
 
 import { eventHelper, getHtmlBlobUrl, handshakeHelper } from './helpers'
 
+type ModalCheckoutPrototype = {
+  _checkoutUrl: string
+}
+
+type ModalCheckoutStatic = {
+  ANIMATION_DURATION: number
+}
+
+const stubCheckoutUrl = (blobUrl: string) =>
+  stub(ModalCheckout.prototype as unknown as ModalCheckoutPrototype, '_checkoutUrl').value(blobUrl)
+
+const stubAnimationDuration = (durationMs: number) =>
+  stub(ModalCheckout as unknown as ModalCheckoutStatic, 'ANIMATION_DURATION').value(durationMs)
+
 describe('ModalCheckout', () => {
   describe('#constructor()', () => {
     it('creates one style sheet', () => {
       const blobUrl = getHtmlBlobUrl(handshakeHelper())
-      const checkoutUrl = stub(ModalCheckout.prototype, '_checkoutUrl' as any).get(() => blobUrl)
+      const checkoutUrl = stubCheckoutUrl(blobUrl)
 
       // There should be no style sheets before instantiating ModalCheckout:
       expect(document.querySelectorAll('style[bc-style]').length).to.equal(0)
@@ -41,7 +55,7 @@ describe('ModalCheckout', () => {
 
     it('creates iframe container, overlay container, backdrop, and focus traps', async () => {
       const blobUrl = getHtmlBlobUrl(handshakeHelper())
-      const checkoutUrl = stub(ModalCheckout.prototype, '_checkoutUrl' as any).get(() => blobUrl)
+      const checkoutUrl = stubCheckoutUrl(blobUrl)
 
       const checkout = new ModalCheckout('123456')
 
@@ -68,7 +82,7 @@ describe('ModalCheckout', () => {
       const newSessionToken = '654321'
       const postMessage = stub(AsyncIframe.prototype, 'postMessage')
       const blobUrl = getHtmlBlobUrl(handshakeHelper())
-      const checkoutUrl = stub(ModalCheckout.prototype, '_checkoutUrl' as any).get(() => blobUrl)
+      const checkoutUrl = stubCheckoutUrl(blobUrl)
 
       postMessage.resolves(newSessionToken)
 
@@ -84,7 +98,7 @@ describe('ModalCheckout', () => {
       const newSessionToken = '654321'
       const postMessage = stub(AsyncIframe.prototype, 'postMessage')
       const blobUrl = getHtmlBlobUrl(handshakeHelper())
-      const checkoutUrl = stub(ModalCheckout.prototype, '_checkoutUrl' as any).get(() => blobUrl)
+      const checkoutUrl = stubCheckoutUrl(blobUrl)
 
       postMessage.rejects()
 
@@ -105,7 +119,7 @@ describe('ModalCheckout', () => {
       const newSessionToken = '654321'
       const postMessage = stub(AsyncIframe.prototype, 'postMessage')
       const blobUrl = getHtmlBlobUrl(handshakeHelper())
-      const checkoutUrl = stub(ModalCheckout.prototype, '_checkoutUrl' as any).get(() => blobUrl)
+      const checkoutUrl = stubCheckoutUrl(blobUrl)
 
       postMessage.resolves(newSessionToken)
 
@@ -130,7 +144,7 @@ describe('ModalCheckout', () => {
   describe('#iframe', () => {
     it('resolves to a HTMLIFrameElement', async () => {
       const blobUrl = getHtmlBlobUrl(handshakeHelper())
-      const checkoutUrl = stub(ModalCheckout.prototype, '_checkoutUrl' as any).get(() => blobUrl)
+      const checkoutUrl = stubCheckoutUrl(blobUrl)
 
       const checkout = new ModalCheckout('123456')
       const iframe = await checkout.iframe
@@ -148,17 +162,20 @@ describe('ModalCheckout', () => {
         handshakeHelper(true, eventHelper(CheckoutEvent.Authorize, { transactionId: '123' })),
       )
 
-      const checkoutUrl = stub(ModalCheckout.prototype, '_checkoutUrl' as any).get(() => blobUrl)
+      const checkoutUrl = stubCheckoutUrl(blobUrl)
 
-      const { type, event } = await new Promise<{ type: string; event: any }>((resolve) => {
+      const { type, payload } = await new Promise<{
+        type: string
+        payload: { transactionId: string }
+      }>((resolve) => {
         const checkout = new ModalCheckout('123456')
         if (checkout.on) {
-          checkout.on('*', (t, e) => resolve({ type: t, event: e }))
+          checkout.on('*', (t, e) => resolve({ type: t, payload: e as { transactionId: string } }))
         }
       })
 
       expect(type).to.equal(CheckoutEvent.Authorize)
-      expect(event.transactionId).to.equal('123')
+      expect(payload.transactionId).to.equal('123')
 
       checkoutUrl.restore()
     })
@@ -168,9 +185,9 @@ describe('ModalCheckout', () => {
     it('displays overlay and resolves upon animation finish', async () => {
       const blobUrl = getHtmlBlobUrl(handshakeHelper())
 
-      const checkoutUrl = stub(ModalCheckout.prototype, '_checkoutUrl' as any).get(() => blobUrl)
+      const checkoutUrl = stubCheckoutUrl(blobUrl)
 
-      const animationDuration = stub(ModalCheckout, 'ANIMATION_DURATION').get(() => 50)
+      const animationDuration = stubAnimationDuration(50)
 
       const checkout = new ModalCheckout('123456')
       const iframe = await checkout.iframe
@@ -205,9 +222,9 @@ describe('ModalCheckout', () => {
     it('hides overlay and resolves upon animation finish', async () => {
       const blobUrl = getHtmlBlobUrl(handshakeHelper())
 
-      const checkoutUrl = stub(ModalCheckout.prototype, '_checkoutUrl' as any).get(() => blobUrl)
+      const checkoutUrl = stubCheckoutUrl(blobUrl)
 
-      const animationDuration = stub(ModalCheckout, 'ANIMATION_DURATION').get(() => 50)
+      const animationDuration = stubAnimationDuration(50)
 
       const checkout = new ModalCheckout('123456')
       const iframe = await checkout.iframe
@@ -241,9 +258,9 @@ describe('ModalCheckout', () => {
     it('is true when the modal is displayed and otherwise false', async () => {
       const blobUrl = getHtmlBlobUrl(handshakeHelper())
 
-      const checkoutUrl = stub(ModalCheckout.prototype, '_checkoutUrl' as any).get(() => blobUrl)
+      const checkoutUrl = stubCheckoutUrl(blobUrl)
 
-      const animationDuration = stub(ModalCheckout, 'ANIMATION_DURATION').get(() => 50)
+      const animationDuration = stubAnimationDuration(50)
 
       const checkout = new ModalCheckout('123456')
 
@@ -263,7 +280,7 @@ describe('ModalCheckout', () => {
   describe('#destroy()', () => {
     it('removes the iframe element from the DOM', async () => {
       const blobUrl = getHtmlBlobUrl(handshakeHelper())
-      const checkoutUrl = stub(ModalCheckout.prototype, '_checkoutUrl' as any).get(() => blobUrl)
+      const checkoutUrl = stubCheckoutUrl(blobUrl)
 
       const checkout = new ModalCheckout('123456')
       const iframe = await checkout.iframe
@@ -279,7 +296,7 @@ describe('ModalCheckout', () => {
 
     it('removes iframe container, overlay container, backdrop, and focus traps', async () => {
       const blobUrl = getHtmlBlobUrl(handshakeHelper())
-      const checkoutUrl = stub(ModalCheckout.prototype, '_checkoutUrl' as any).get(() => blobUrl)
+      const checkoutUrl = stubCheckoutUrl(blobUrl)
 
       const checkout = new ModalCheckout('123456')
       const iframe = await checkout.iframe

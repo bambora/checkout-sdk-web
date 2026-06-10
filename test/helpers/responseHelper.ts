@@ -1,6 +1,6 @@
 import { Action } from '../../src/actions'
 
-export function responseHelper(result = true, action: Action = Action.LoadSession, payload?: any): string {
+export function responseHelper(result = true, action: Action = Action.LoadSession, payload?: unknown): string {
   return `
     <script>
       function onLoadSession(event) {

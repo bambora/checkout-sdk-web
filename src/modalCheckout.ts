@@ -60,8 +60,9 @@ export default class ModalCheckout extends AbstractIframeCheckout<ModalCheckoutI
     this._createAsyncIframe()
 
     if (this.on) {
-      this.on(CheckoutEvent.Cancel, this.hide.bind(this))
-      this.on(CheckoutEvent.Close, this.hide.bind(this))
+      const hideOnEvent = (event?: unknown) => this.hide(event instanceof Element ? event : undefined)
+      this.on(CheckoutEvent.Cancel, hideOnEvent)
+      this.on(CheckoutEvent.Close, hideOnEvent)
     }
   }
 
@@ -154,13 +155,13 @@ export default class ModalCheckout extends AbstractIframeCheckout<ModalCheckoutI
   }
 
   private _getElementCoordinates(target?: Element): ElementCoordinates {
-    const element = target && (target as any).getBoundingClientRect ? target : this._initiatingElement
+    const element = target || (this._initiatingElement instanceof Element ? this._initiatingElement : null)
 
     if (!element) {
       return { x: 0, y: 0 }
     }
 
-    const boundingClientRect = (element as Element).getBoundingClientRect()
+    const boundingClientRect = element.getBoundingClientRect()
 
     return {
       x: boundingClientRect.left + boundingClientRect.width / 2,

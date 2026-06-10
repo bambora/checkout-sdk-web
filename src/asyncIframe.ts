@@ -19,7 +19,7 @@ export default class AsyncIframe {
   private readonly _iframeElement: Promise<HTMLIFrameElement>
   private readonly _id: string
   private readonly _origin: string
-  private _onMessageListener: any
+  private _onMessageListener?: (event: MessageEvent) => void
 
   constructor(source: string, container: Element, origin: string, eventHandlerMap?: Partial<EventHandlerMap>) {
     this._origin = origin
@@ -41,7 +41,9 @@ export default class AsyncIframe {
   destroy() {
     const iframe = document.getElementById(this._id)
 
-    window.removeEventListener('message', this._onMessageListener)
+    if (this._onMessageListener) {
+      window.removeEventListener('message', this._onMessageListener)
+    }
 
     if (!iframe) return
     iframe.parentElement?.removeChild(iframe)
@@ -56,7 +58,8 @@ export default class AsyncIframe {
    * Posts a message to the iframe content documents.
    * Resolves or rejects with a reply or acknowledgement from the iframe.
    */
-  async postMessage<RequestType = any, ResponseType = any>(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- backward compatibility for legacy payload typing
+  async postMessage<RequestType = unknown | any, ResponseType = unknown | any>(
     message: GenericMessageRequest<RequestType>,
     // The iframeElement parameter should only be used for the initial handshake.
     iframeElement?: HTMLIFrameElement,
@@ -155,7 +158,7 @@ export default class AsyncIframe {
 
   private _rebindIframeEventHandlers(iframeElement: HTMLIFrameElement): HTMLIFrameElement {
     iframeElement.onload = () => this._initiateHandshake(iframeElement)
-    iframeElement.onerror = null as any
+    iframeElement.onerror = null
 
     return iframeElement
   }
@@ -175,7 +178,8 @@ export function getOrigin(url: string): string {
 }
 
 /** The signature of message requests. */
-export interface GenericMessageRequest<T = any> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- backward compatibility for legacy payload typing
+export interface GenericMessageRequest<T = unknown | any> {
   action: Action
   payload?: T
 }

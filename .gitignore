@@ -1,3 +1,4 @@
 node_modules/
 dist/
 .vscode/
+bambora-checkout-sdk-web-*.tgz

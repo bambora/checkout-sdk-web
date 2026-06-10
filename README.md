@@ -16,8 +16,6 @@ Currently, the following integrations are available:
 
 **CDN:** <https://static.bambora.com/checkout-sdk-web/latest/checkout-sdk-web.min.js>
 
-Minified and gzipped size is ~6 KB.
-
 The CDN version contains a polyfill to support promises in IE 11.
 
 The NPM package supports ESM.
@@ -32,16 +30,25 @@ We don't test other browsers, but bug reports and pull requests for bugs related
 
 Requirements are _Node_ and _NPM_.
 
-Clone the project, navigate to the project root, and run `npm run build` in your terminal.
-This will install all dependencies and output all assets to the `dist`-folder.
+Clone the project, navigate to the project root, and run:
+
+```bash
+npm install
+npm run build
+```
+
+This installs dependencies and outputs build assets to the `dist` folder.
 
 It is also possible to set up a watcher for source files for changes by running `npm start`.
 
 ## Test
 
-Run `npm test` in your terminal in the project root.
+Run the following commands in the project root:
 
-Run `npm run lint` for linting.
+- `npm run lint` for linting.
+- `npm test` for browser tests.
+- `npm run test:package` to validate package contents and installability.
+- `npm run test:all` to run the full validation pipeline.
 
 ## Contributing
 
